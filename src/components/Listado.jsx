@@ -6,14 +6,6 @@ export default function Listado() {
     const [tipoOperacion, setTipoOperacion] = useState("");
     const [categoria, setCategoria] = useState("0");
 
-    const handleChangeTipoOperacion = (e) => {
-        setTipoOperacion(e.target.value);
-    };
-
-    const handleChangeCategoria = (e) => {
-        setCategoria(e.target.value);
-    };
-
     useEffect(() => {
         async function fetchMyAPI() {
             let respuesta = await axios.get(
@@ -23,6 +15,14 @@ export default function Listado() {
         }
         fetchMyAPI();
     }, []);
+
+    const handleChangeTipoOperacion = (e) => {
+        setTipoOperacion(e.target.value);
+    };
+
+    const handleChangeCategoria = (e) => {
+        setCategoria(e.target.value);
+    };
 
     const actualizarTabla = (e) => {
         e.preventDefault();
@@ -64,6 +64,20 @@ export default function Listado() {
 
             }
         }
+        fetchMyAPI();
+    }
+
+    const eliminarRegistro = (e) => {
+        e.preventDefault();
+        const id = e.target.id
+        //Borro registro de la Base de datos
+        async function fetchMyAPI() {
+            await axios.delete(
+                `http://localhost:4000/api/operaciones/${id}`
+            );
+        }
+        let newOperaciones = operaciones.filter(operacion => operacion.id_operacion !== Number(id))
+        setOperaciones(newOperaciones)
         fetchMyAPI();
     }
 
@@ -132,17 +146,23 @@ export default function Listado() {
                             <th scope="col">Tipo</th>
                             <th scope="col">Monto</th>
                             <th scope="col">Fecha</th>
+                            <th scope="col" className="w-25">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {operaciones.map((operacion, index) => (
                             <tr key={operacion.id_operacion}>
-                                <th scope="row">{index + 1}</th>
+                                {/* <th scope="row">{index + 1}</th> */}
+                                <th scope="row">{operacion.id_operacion}</th>
                                 <td key={operacion.id_operacion}>
                                     {operacion.operacion_tipo}
                                 </td>
                                 <td>{operacion.operacion_monto}</td>
                                 <td>{operacion.operacion_fecha.slice(0, 10)}</td>
+                                <td>
+                                    <button type="button" className="btn btn-info btn-sm mr-2">Modificar</button>
+                                    <button type="button" className="btn btn-danger btn-sm" onClick={eliminarRegistro} id={operacion.id_operacion}>Eliminar</button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
