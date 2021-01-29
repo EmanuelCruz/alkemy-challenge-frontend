@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Listado() {
-    const [operaciones, setOperaciones] = useState([])
+    const [operaciones, setOperaciones] = useState([]);
     const [tipoOperacion, setTipoOperacion] = useState("");
     const [categoria, setCategoria] = useState("0");
 
@@ -27,64 +28,62 @@ export default function Listado() {
     const actualizarTabla = (e) => {
         e.preventDefault();
         async function fetchMyAPI() {
-
-            if(tipoOperacion.length !== 0 && parseInt(categoria)  > 0) {
-                console.log("los datos no son vacios")
-                console.log(tipoOperacion.length,categoria);
+            if (tipoOperacion.length !== 0 && parseInt(categoria) > 0) {
+                console.log("los datos no son vacios");
+                console.log(tipoOperacion.length, categoria);
                 const operacion = `${tipoOperacion.toLowerCase()}s`;
                 let respuesta = await axios.get(
                     `http://localhost:4000/api/${operacion}/${categoria}`
                 );
                 setOperaciones(respuesta.data);
-
-            } else if(tipoOperacion.length === 0 && parseInt(categoria) === 0) {
-                console.log("Los datos son vacios")
-                console.log(tipoOperacion.length,categoria);
+            } else if (
+                tipoOperacion.length === 0 &&
+                parseInt(categoria) === 0
+            ) {
+                console.log("Los datos son vacios");
+                console.log(tipoOperacion.length, categoria);
                 let respuesta = await axios.get(
                     `http://localhost:4000/api/operaciones`
                 );
                 setOperaciones(respuesta.data);
-
-            } else if(parseInt(categoria) === 0){
-                console.log('La categoria es vacio');
-                console.log(tipoOperacion.length,categoria);
+            } else if (parseInt(categoria) === 0) {
+                console.log("La categoria es vacio");
+                console.log(tipoOperacion.length, categoria);
                 const operacion = `${tipoOperacion.toLowerCase()}s`;
                 let respuesta = await axios.get(
                     `http://localhost:4000/api/${operacion}`
                 );
                 setOperaciones(respuesta.data);
-
-            } else if (tipoOperacion.length === 0){
-                console.log('El tipo de operacion es vacio');
-                console.log(tipoOperacion.length,categoria);
+            } else if (tipoOperacion.length === 0) {
+                console.log("El tipo de operacion es vacio");
+                console.log(tipoOperacion.length, categoria);
                 let respuesta = await axios.get(
                     `http://localhost:4000/api/operaciones/categoria/${categoria}`
                 );
                 setOperaciones(respuesta.data);
-
             }
         }
         fetchMyAPI();
-    }
+    };
 
     const eliminarRegistro = (e) => {
         e.preventDefault();
-        const id = e.target.id
+        const id = e.target.id;
         //Borro registro de la Base de datos
         async function fetchMyAPI() {
-            await axios.delete(
-                `http://localhost:4000/api/operaciones/${id}`
-            );
+            await axios.delete(`http://localhost:4000/api/operaciones/${id}`);
         }
-        let newOperaciones = operaciones.filter(operacion => operacion.id_operacion !== Number(id))
-        setOperaciones(newOperaciones)
+        let newOperaciones = operaciones.filter(
+            (operacion) => operacion.id_operacion !== Number(id)
+        );
+        setOperaciones(newOperaciones);
         fetchMyAPI();
-    }
+    };
 
     return (
         <div className="container ">
             <div className="col-lg-8 mx-auto my-5">
-                <form >
+                <form>
                     <div className="border-bottom mt-2 mx-auto">
                         <div className="form-group row ">
                             <label
@@ -133,7 +132,12 @@ export default function Listado() {
                         </div>
                     </div>
                     <div className="mt-3 d-flex flex-row-reverse">
-                        <button onClick={actualizarTabla} className="btn btn-primary">Buscar</button>
+                        <button
+                            onClick={actualizarTabla}
+                            className="btn btn-primary"
+                        >
+                            Buscar
+                        </button>
                     </div>
                 </form>
             </div>
@@ -146,7 +150,9 @@ export default function Listado() {
                             <th scope="col">Tipo</th>
                             <th scope="col">Monto</th>
                             <th scope="col">Fecha</th>
-                            <th scope="col" className="w-25">Acciones</th>
+                            <th scope="col" className="w-25">
+                                Acciones
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -158,10 +164,29 @@ export default function Listado() {
                                     {operacion.operacion_tipo}
                                 </td>
                                 <td>{operacion.operacion_monto}</td>
-                                <td>{operacion.operacion_fecha.slice(0, 10)}</td>
                                 <td>
-                                    <button type="button" className="btn btn-info btn-sm mr-2">Modificar</button>
-                                    <button type="button" className="btn btn-danger btn-sm" onClick={eliminarRegistro} id={operacion.id_operacion}>Eliminar</button>
+                                    {operacion.operacion_fecha.slice(0, 10)}
+                                </td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        className="btn btn-info btn-sm mr-2 p-1"
+                                    >
+                                        <Link
+                                            className="nav-link p-1"
+                                            to={`/operacion/${operacion.id_operacion}`}
+                                        >
+                                            Modificar
+                                        </Link>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger btn-sm p-2"
+                                        onClick={eliminarRegistro}
+                                        id={operacion.id_operacion}
+                                    >
+                                        Eliminar
+                                    </button>
                                 </td>
                             </tr>
                         ))}
