@@ -6,9 +6,9 @@ import "./App.css";
 import Navigations from "./components/Navigations";
 import CurrentBalance from "./components/CurrentBalance";
 import BalanceList from "./components/BalanceList";
-import Listado from "./components/Listado";
-import CreateOperacion from "./components/CreateOperacion";
-import EditarOperacion from "./components/EditarOperacion";
+import List from "./components/List";
+import CreateOperation from "./components/CreateOperation";
+import EditOperation from "./components/EditOperation";
 
 function App() {
     return (
@@ -17,13 +17,9 @@ function App() {
             <Route exact path="/" component={CurrentBalance} />
             <Route exact path="/" component={BalanceList} />
 
-            <Route path="/listado" component={Listado} />
-            <Route exact path="/operacion" component={CreateOperacion} />
-            <Route
-                exact
-                path="/:tipoOperacion/:id"
-                component={EditarOperacion}
-            />
+            <Route path="/list" component={List} />
+            <Route exact path="/operations" component={CreateOperation} />
+            <Route exact path="/operation/:id" component={EditOperation} />
         </Router>
     );
 }

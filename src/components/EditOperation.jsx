@@ -2,47 +2,47 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
-export default function CreateOperacion() {
+export default function EditOperation() {
     const { id } = useParams();
     const history = useHistory();
 
-    const [tipoOperacion, setTipoOperacion] = useState("");
-    const [monto, setMonto] = useState(0);
-    const [fecha, setFecha] = useState("");
-    const [categoria, setCategoria] = useState("");
-    const [concepto, setConcepto] = useState("");
+    const [typeOperation, setTypeOperation] = useState("");
+    const [amount, setAmount] = useState(0);
+    const [date, setDate] = useState("");
+    const [category, setCategory] = useState("");
+    const [concept, setConcept] = useState("");
 
     useEffect(() => {
         async function fetchMyAPI() {
-            let respuesta = await axios.get(
-                `http://localhost:4000/api/operaciones/${id}`
+            let response = await axios.get(
+                `http://localhost:4000/api/operations/${id}`
             );
-            setTipoOperacion(
-                respuesta.data.map((operacion) => operacion.operacion_tipo)
+            setTypeOperation(
+                response.data.map((operation) => operation.operacion_tipo)
             );
-            setMonto(
-                respuesta.data.map((operacion) => operacion.operacion_monto)
+            setAmount(
+                response.data.map((operation) => operation.operacion_monto)
             );
-            setFecha(
-                respuesta.data.map((operacion) =>
-                    formatDate(operacion.operacion_fecha)
+            setDate(
+                response.data.map((operation) =>
+                    formatDate(operation.operacion_fecha)
                 )
             );
-            setCategoria(
-                respuesta.data.map((operacion) => operacion.operacion_categoria)
+            setCategory(
+                response.data.map((operation) => operation.operacion_categoria)
             );
-            setConcepto(
-                respuesta.data.map((operacion) => operacion.operacion_concepto)
+            setConcept(
+                response.data.map((operation) => operation.operacion_concepto)
             );
         }
         fetchMyAPI();
     }, [id]);
 
     function formatDate(date) {
-        var d = new Date(date),
-            month = "" + (d.getMonth() + 1),
-            day = "" + d.getDate(),
-            year = d.getFullYear();
+        let myDate = new Date(date),
+            month = "" + (myDate.getMonth() + 1),
+            day = "" + myDate.getDate(),
+            year = myDate.getFullYear();
 
         if (month.length < 2) month = "0" + month;
         if (day.length < 2) day = "0" + day;
@@ -50,64 +50,65 @@ export default function CreateOperacion() {
         return [year, month, day].join("-");
     }
 
-    const onChangeConcepto = (e) => {
-        setConcepto(e.target.value);
+    const onChangeConcept = (e) => {
+        setConcept(e.target.value);
     };
 
-    const handleChangeCategoria = (e) => {
-        setCategoria(e.target.value);
+    const handleChangeCategory = (e) => {
+        setCategory(e.target.value);
     };
 
-    const onChangeMonto = (e) => {
-        setMonto(e.target.value);
+    const onChangeAmount = (e) => {
+        setAmount(e.target.value);
     };
 
-    const onChangeFecha = (e) => {
-        setFecha(e.target.value);
+    const onChangeDate = (e) => {
+        setDate(e.target.value);
     };
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        let resp = await axios.put(
-            `http://localhost:4000/api/operaciones/${id}`,
+        let response = await axios.put(
+            `http://localhost:4000/api/operations/${id}`,
             {
-                tipo: tipoOperacion,
-                concepto: concepto,
-                monto: monto,
-                fecha: fecha,
-                categoria: categoria,
+                tipo: typeOperation,
+                concepto: concept,
+                monto: amount,
+                fecha: date,
+                categoria: category,
             }
         );
-        alert(resp.data.respuesta);
-        history.push("/listado");
+        alert(response.data.respuesta);
+        history.push("/list");
     };
 
     return (
         <div className="container my-5">
             <div className="card card-body col-lg-8 mx-auto">
                 <h4 className="pb-2 border-bottom text-center">
-                    Editar Operación
+                    Modify Operation
                 </h4>
                 <form onSubmit={onSubmit}>
                     <div className="border-bottom mt-2">
                         <div className="form-group row ">
                             <label
-                                htmlFor="inputTipoOperacion"
+                                htmlFor="inputTypeOperation"
                                 className="col-sm-3 col-form-label"
                             >
-                                Tipo:
+                                Type:
                             </label>
                             <div className="col-sm-9">
                                 <select
-                                    id="inputTipoOperacion"
+                                    id="inputTypeOperation"
                                     className="form-control"
-                                    // value={tipoOperacion}
                                     required
                                 >
-                                    {tipoOperacion.toString() === "Ingreso" ? (
-                                        <option value="Ingreso">Ingreso</option>
+                                    {typeOperation.toString() === "Income" ? (
+                                        <option value="Income">Income</option>
                                     ) : (
-                                        <option value="Egreso">Egreso</option>
+                                        <option value="Expenses">
+                                            Expenses
+                                        </option>
                                     )}
                                 </select>
                             </div>
@@ -115,20 +116,20 @@ export default function CreateOperacion() {
 
                         <div className="form-group row ">
                             <label
-                                htmlFor="inputMonto"
+                                htmlFor="inputAmount"
                                 className="col-sm-3 col-form-label"
                             >
-                                Monto:
+                                Amount:
                             </label>
                             <div className="col-sm-9">
                                 <input
                                     type="number"
-                                    id="inputMonto"
+                                    id="inputAmount"
                                     className="form-control"
                                     pattern="^[0-9]"
                                     min="1"
-                                    value={monto}
-                                    onChange={onChangeMonto}
+                                    value={amount}
+                                    onChange={onChangeAmount}
                                     required
                                 />
                             </div>
@@ -136,44 +137,44 @@ export default function CreateOperacion() {
 
                         <div className="form-group row ">
                             <label
-                                htmlFor="inputCategoria"
+                                htmlFor="inputCategory"
                                 className="col-sm-3 col-form-label"
                             >
-                                Categoría:
+                                Category:
                             </label>
                             <div className="col-sm-9">
                                 <select
-                                    id="inputCategoria"
+                                    id="inputCategory"
                                     className="form-control"
-                                    value={categoria}
-                                    onChange={handleChangeCategoria}
+                                    value={category}
+                                    onChange={handleChangeCategory}
                                     required
                                 >
                                     <option value="0" defaultValue></option>
-                                    <option value="1">Comida</option>
-                                    <option value="2">Servicio</option>
-                                    <option value="3">Limpieza</option>
-                                    <option value="4">Ropa</option>
-                                    <option value="5">Sueldo</option>
-                                    <option value="6">Otros</option>
+                                    <option value="1">Foof</option>
+                                    <option value="2">Service</option>
+                                    <option value="3">Cleaning</option>
+                                    <option value="4">Clothing</option>
+                                    <option value="5">Salary</option>
+                                    <option value="6">Others</option>
                                 </select>
                             </div>
                         </div>
 
                         <div className="form-group row">
                             <label
-                                htmlFor="inputFecha"
+                                htmlFor="inputDate"
                                 className="col-sm-3 col-form-label"
                             >
-                                Fecha:
+                                Date:
                             </label>
                             <div className="col-sm-9">
                                 <input
                                     type="date"
                                     className="form-control"
-                                    id="inputFecha"
-                                    onChange={onChangeFecha}
-                                    value={fecha}
+                                    id="inputDate"
+                                    onChange={onChangeDate}
+                                    value={date}
                                     required
                                 ></input>
                             </div>
@@ -181,25 +182,25 @@ export default function CreateOperacion() {
 
                         <div className="form-group row">
                             <label
-                                htmlFor="inputConcepto"
+                                htmlFor="inputConcept"
                                 className="col-sm-3 col-form-label"
                             >
-                                Concepto:
+                                Concept:
                             </label>
                             <div className="col-sm-9 ">
                                 <textarea
                                     className="form-control"
-                                    id="inputConcepto"
+                                    id="inputConcept"
                                     rows="2"
-                                    value={concepto}
-                                    onChange={onChangeConcepto}
+                                    value={concept}
+                                    onChange={onChangeConcept}
                                     required
                                 ></textarea>
                             </div>
                         </div>
                     </div>
                     <div className="mt-3 d-flex flex-row-reverse">
-                        <button className="btn btn-primary">Guardar</button>
+                        <button className="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>

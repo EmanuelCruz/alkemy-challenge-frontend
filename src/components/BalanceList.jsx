@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function BalanceList() {
-    const [operaciones, setOperaciones] = useState([]);
+    const [operations, setOperations] = useState([]);
 
     useEffect(() => {
         async function fetchMyAPI() {
-            let filas = 10;
-            let respuesta = await axios.get(
-                `http://localhost:4000/api/operaciones/recientes/${filas}`
+            let rows = 10;
+            let response = await axios.get(
+                `http://localhost:4000/api/operations/recent/${rows}`
             );
-            setOperaciones(respuesta.data);
+            setOperations(response.data);
         }
         fetchMyAPI();
     }, []);
@@ -21,18 +21,20 @@ export default function BalanceList() {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col">Monto</th>
-                        <th scope="col">Fecha</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {operaciones.map((operacion, index) => (
-                        <tr key={operacion.id_operacion}>
+                    {operations.map((operation, index) => (
+                        <tr key={operation.id_operacion}>
                             <th scope="row">{index + 1}</th>
-                            <td key={operacion.id_operacion}>{operacion.operacion_tipo}</td>
-                            <td>{operacion.operacion_monto}</td>
-                            <td>{operacion.operacion_fecha.slice(0, 10)}</td>
+                            <td key={operation.id_operacion}>
+                                {operation.operacion_tipo}
+                            </td>
+                            <td>{operation.operacion_monto}</td>
+                            <td>{operation.operacion_fecha.slice(0, 10)}</td>
                         </tr>
                     ))}
                 </tbody>
